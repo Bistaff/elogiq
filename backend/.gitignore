@@ -1,0 +1,39 @@
+.idea
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django specific:
+*.log
+*.pot
+*.pyc
+
+# SQLite database (se non vuoi versionarlo)
+db.sqlite3
+
+# Media files (es. file caricati)
+media/
+
+# Static files (generati da collectstatic)
+staticfiles/
+
+# Virtualenv
+venv/
+env/
+ENV/
+.venv/
+
+# IDEs
+.vscode/
+.idea/
+
+# MacOS
+.DS_Store
+
+# Pipenv
+Pipfile.lock
+
+# Coverage reports
+html

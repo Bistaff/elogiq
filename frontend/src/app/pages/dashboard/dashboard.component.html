@@ -1,0 +1,32 @@
+<div class="main-grid d-block d-lg-grid">
+  <div class="header border-bottom bg-primary text-white d-none d-lg-flex
+              justify-content-between align-items-center px-5">
+    <div>
+        <span class="fs-4">EOGIQ. </span><span>La logistica semplice</span>
+    </div>
+
+    <img class="logo" src="assets/company-profile-image.png" alt="Logo" width="45">
+  </div>
+  <div class="sidebar border-end d-block">
+    <app-sidebar></app-sidebar>
+  </div>
+  <div class="sidebar border-end d-none d-lg-block">
+    <app-sidebar></app-sidebar>
+  </div>
+  <div class="content p-5 position-relative">
+    <div class="d-none d-lg-flex align-items-center px-5" style="position: absolute; top: 10px; left: 0;">
+      @for (page of pages; track page; let last = $last) {
+        @if (pages.length > 1 && !last) {
+          <a class="link-offset-2 link-offset-2-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover me-1"
+             [routerLink]="[page.route]">
+            {{ page.text | titlecase }}
+          </a>
+          <span class="me-1 text-primary">></span>
+        } @else {
+          <span>{{ page.text }}</span>
+        }
+      }
+    </div>
+    <router-outlet></router-outlet>
+  </div>
+</div>

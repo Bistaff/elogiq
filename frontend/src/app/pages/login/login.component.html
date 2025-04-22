@@ -1,0 +1,6 @@
+<div class="d-flex h-100 justify-content-center align-items-center">
+  <div class="w-50 p-5 d-flex flex-column bg-primary">
+    <app-form [controls]="loginFormControls" (formSubmittedOutput)="onSubmit($event)"
+              [(error)]="error" [isLoading]="isLoading | async" [horizontal]="false"></app-form>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+services:
+
+  postgres:
+    networks:
+      - elogiq_net
+    container_name: postgres
+    image: postgres:16.8-bullseye
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+  backend:
+    networks:
+      - elogiq_net
+    image: ${BE_IMAGE_NAME}:${BE_IMAGE_TAG}
+    container_name: ${BE_IMAGE_NAME}
+    command: ["./run_be.sh"]
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+
+  frontend:
+    networks:
+      - elogiq_net
+    image: ${FE_IMAGE_NAME}:${FE_IMAGE_TAG}
+    container_name: ${FE_IMAGE_NAME}
+    command: ["./run_fe.sh"]
+    ports:
+      - "4000:4000"
+    depends_on:
+      - backend
+
+# Docker creates a volume with that name and a directory on disk
+volumes:
+  postgres_data:
+
+networks:
+  elogiq_net:
+    driver: bridge

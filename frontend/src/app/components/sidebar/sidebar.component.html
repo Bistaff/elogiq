@@ -1,0 +1,37 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary d-lg-none">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src="assets/logo.png" alt="Logo" width="40">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarScroll">
+      <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+        @for (item of menuItems; track item.appRoute) {
+          <li [routerLink]="item.appRoute" class="nav-item py-2"
+              [ngClass]="{'border-primary': currentPage === item.name, 'border-transparent': currentPage != item.name}"
+              (click)="changeCurrentPage(item.name)">
+            {{ item.name | uppercase }}
+          </li>
+        }
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="h-100 py-2 d-none d-lg-block">
+  <div class="d-flex justify-content-center mb-3">
+    <img src="assets/logo.png" alt="Logo" width="40">
+  </div>
+
+  <div class="list-group list-group-flush border-0 d-block-sm">
+    @for (item of menuItems; track item.appRoute) {
+      <li [routerLink]="item.appRoute" class="list-group-item border-0 border-end border-size-5" role="button"
+          [ngClass]="{'border-primary': currentPage === item.name, 'border-transparent': currentPage != item.name}"
+          (click)="changeCurrentPage(item.name)">
+          {{ item.name | uppercase }}
+      </li>
+    }
+  </div>
+</div>

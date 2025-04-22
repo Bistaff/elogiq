@@ -1,0 +1,14 @@
+services:
+
+  frontend:
+    networks:
+      - elogiq_net
+    image: ${IMAGE_NAME}:${IMAGE_TAG}
+    container_name: ${IMAGE_NAME}
+    command: ["./run_fe.sh"]
+    ports:
+      - "4000:4000"
+
+networks:
+  elogiq_net:
+    driver: bridge

@@ -1,0 +1,24 @@
+<div>
+  <form (ngSubmit)="onSubmit()" [formGroup]="form" [ngClass]="{'d-flex align-items-end': horizontal()}">
+    @for (control of controls(); track control) {
+      <div [ngClass]="{'mb-3': !horizontal()}">
+        <app-form-control [control]="control" [form]="form"
+            [horizontal]="horizontal()"></app-form-control>
+      </div>
+    }
+
+    <button *ngIf="!isLoading()" type="submit" class="btn"
+            [ngClass]="{'w-100': !horizontal(), 'btn-outline-light': light(), 'btn-outline-dark': !light()}"
+            [disabled]="!form.valid">Invia</button>
+    <button *ngIf="isLoading()" class="btn btn-outline-light"
+            [ngClass]="{'w-100': !horizontal(), 'btn-outline-light': light(), 'btn-outline-dark': !light()}"
+            type="button" disabled>
+      <span class="spinner-grow spinner-grow-sm me-2" aria-hidden="true"></span>
+      <span role="status">Attendere...</span>
+    </button>
+  </form>
+
+  <p *ngIf="error()" class="text-danger m-0 mt-2">
+    Errore: {{error()}}
+  </p>
+</div>

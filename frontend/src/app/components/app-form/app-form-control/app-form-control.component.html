@@ -1,0 +1,30 @@
+<div [formGroup]="form()" class="me-3">
+  <label [attr.for]="control().key" class="form-label text-nowrap">
+    {{ control().label }}
+    @if (horizontal() && !isValid && !form().disabled) {
+      <small class="text-danger">*</small>
+    }
+  </label>
+  <div>
+    @switch (control().controlType) {
+      @case ('textbox') {
+        <input [formControlName]="control().key" [id]="control().key" [type]="control().type" class="form-control">
+      } @case ('textbox-protected') {
+        <div class="input-group">
+          <input [id]="control().key" class="form-control" [type]="showContent ? 'text' : control().type"
+                 [formControlName]="control().key">
+          <span class="input-group-text" id="show-password" (click)="showContent = !showContent">
+            <i class="bi bi-eye-slash" [ngClass]="showContent ? 'bi-eye' : 'bi-eye-slash'"></i>
+          </span>
+        </div>
+      } @case ('dropdown') {
+        <select [id]="control().key" [formControlName]="control().key" class="form-select" >
+          @for (opt of control().options; track opt) {
+            <option [value]="opt.key">{{ opt.value }}</option>
+          }
+        </select>
+      }
+    }
+  </div>
+  @if (!horizontal() && !isValid && !form().disabled) {<small class="text-danger">{{ control().label }} is required</small>}
+</div>

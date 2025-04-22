@@ -88,31 +88,3 @@ html, body, app-root {
 .border-size-5 {
   border-width: 5px !important;
 }
-
-.app-alert { width: 10px; }
-
-//xs: 0,
-//sm: 576px,
-//md: 768px,
-//lg: 992px,
-//xl: 1200px,
-//xxl: 1400px
-
-@include media-breakpoint-up(xs) {
-  .app-alert { width: 300px; }
-}
-@include media-breakpoint-up(sm) {
-  .app-alert { width: 500px; }
-}
-@include media-breakpoint-up(md) {
-  .app-alert { width: 650px; }
-}
-@include media-breakpoint-up(lg) {
-  .app-alert { width: 600px; }
-}
-@include media-breakpoint-up(xl) {
-  .app-alert { width: 750px; }
-}
-@include media-breakpoint-up(xxl) {
-  .app-alert { width: 750px; }
-}

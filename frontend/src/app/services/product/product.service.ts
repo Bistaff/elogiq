@@ -22,7 +22,6 @@ export class ProductService extends BaseApiService {
     }
     let params: string = `holdingCost=${req.holdingCost}&setupCost=${req.setupCost}`;
     if (req.annualDemand) params = `${params}&annualDemand=${req.annualDemand}`;
-    console.log("AAA 1", params, urlPathParams);
     return this.execute({params: params, urlPathParams}).pipe(
       map((response: IProduct) => {
         return response

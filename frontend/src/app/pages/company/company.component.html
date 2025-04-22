@@ -29,70 +29,6 @@
 
   <h3 class="mt-3 mb-3">Prodotti</h3>
 
-<!--  <div class="d-xl-none my-4">-->
-<!--    <div class="d-flex justify-content-between align-items-start mb-3">-->
-<!--      <h3 class="m-0">Prodotti</h3>-->
-<!--      <button class="btn btn-outline-primary me-3 text-nowrap" (click)="showEOQ()">-->
-<!--        {{eoq() ? 'Nascondi EOQ' : 'Mostra EOQ'}}-->
-<!--      </button>-->
-<!--    </div>-->
-
-<!--    <div class="mb-3">-->
-<!--      @if (holdingCost) {-->
-<!--        <p class="m-0"><span class=" fw-bold">Costo di mantemimento:</span> {{holdingCost | currency: 'EUR' : 'symbol' : '1.2-2'}}</p>-->
-<!--        @if (annualDemand) {-->
-<!--          <p class="m-0"><span class=" fw-bold">Domanda annuale:</span> {{annualDemand}}</p>-->
-<!--        }-->
-<!--      }-->
-<!--    </div>-->
-
-
-<!--    <div class="d-flex align-items-end">-->
-<!--      @if (eoq()) {-->
-<!--        <div class="d-flex align-items-start flex-column">-->
-<!--          <div class="d-flex align-items-center">-->
-<!--            <small ><i class="bi bi-info-circle-fill me-1"></i></small>-->
-<!--            <small class="fw-lighter">Inserendo solo il costo di mantenimento è possibile avere una predizione della domanda annuale di quest'anno</small>-->
-<!--          </div>-->
-<!--          <div class="d-flex align-items-center">-->
-<!--            <app-form [controls]="formControls" (formSubmittedOutput)="onSubmit($event)"-->
-<!--                      [isLoading]="isLoading | async" [horizontal]="true" [light]="false"></app-form>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      }-->
-<!--    </div>-->
-<!--  </div>-->
-
-<!--  <div class="d-none d-xl-flex justify-content-between align-items-start my-4">-->
-<!--    <div>-->
-<!--      <h3>Prodotti</h3>-->
-<!--      @if (holdingCost) {-->
-<!--        <p class="m-0"><span class=" fw-bold">Costo di mantemimento:</span> {{holdingCost | currency: 'EUR' : 'symbol' : '1.2-2'}}</p>-->
-<!--        @if (annualDemand) {-->
-<!--          <p class="m-0"><span class=" fw-bold">Domanda annuale:</span> {{annualDemand}}</p>-->
-<!--        }-->
-<!--      }-->
-<!--    </div>-->
-
-<!--    <div class="d-flex align-items-end">-->
-<!--      <button class="btn btn-outline-primary me-3 text-nowrap" (click)="showEOQ()">-->
-<!--        {{eoq() ? 'Nascondi EOQ' : 'Mostra EOQ'}}-->
-<!--      </button>-->
-<!--      @if (eoq()) {-->
-<!--        <div class="d-flex align-items-start flex-column">-->
-<!--          <div class="d-flex align-items-center">-->
-<!--            <small ><i class="bi bi-info-circle-fill me-1"></i></small>-->
-<!--            <small class="fw-lighter">Inserendo solo il costo di mantenimento è possibile avere una predizione della domanda annuale di quest'anno</small>-->
-<!--          </div>-->
-<!--          <div class="d-flex align-items-center">-->
-<!--            <app-form [controls]="formControls" (formSubmittedOutput)="onSubmit($event)"-->
-<!--                      [isLoading]="isLoading | async" [horizontal]="true" [light]="false"></app-form>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      }-->
-<!--    </div>-->
-<!--  </div>-->
-
 
   @if (company.products.length > 0) {
     <ng-container
@@ -113,14 +49,13 @@
         <th scope="col">Nome</th>
         <th scope="col">Descrizione</th>
         <th scope="col">Prezzo</th>
-        <th scope="col">Costo ordine</th>
         <th scope="col">Fasce di prezzo</th>
         <th scope="col">EOQ</th>
       </tr>
       </thead>
       <tbody>
         @for (product of products; track product.name; let index = $index) {
-          <tr role="button" (click)="showEOQ(index)">
+          <tr role="button" (click)="showEOQ(modal, index)">
             <th scope="row">{{product.id}}</th>
             <td class="text-nowrap">{{product.name}}</td>
             <td style="min-width: 300px;">{{product.description}}</td>
@@ -132,6 +67,20 @@
               />
             </td>
             <td style="min-width: 300px;">
+              SISTEMAREEE
+              @if (productInfo[product.id]) {
+                <div class="mb-3">
+                  @if (productInfo[product.id].holdingCost) {
+                    <small><span class="badge rounded-pill text-bg-primary me-2">Costo di mantenimento: {{productInfo[product.id].holdingCost | currency: 'EUR' : 'symbol' : '1.2-2'}}</span></small>
+                  }
+                  @if (productInfo[product.id].setupCost) {
+                    <small><span class="badge rounded-pill text-bg-success me-2">Costo d'ordine: {{productInfo[product.id].setupCost | currency: 'EUR' : 'symbol' : '1.2-2'}}</span></small>
+                  }
+                  @if (productInfo[product.id].annualDemand) {
+                    <small><span class="badge rounded-pill text-bg-info">Domanda annua: {{productInfo[product.id].annualDemand}}</span></small>
+                  }
+                </div>
+              }
               @if (product.eoq) {
                 <ng-container
                   [ngTemplateOutlet]="eoqInfo"
@@ -147,43 +96,6 @@
               }
             </td>
           </tr>
-          @if (eoq() === index) {
-            <tr>
-              <td colspan="12">
-                <table>
-                  <tr>
-                    <td>
-                      @if (holdingCost || annualDemand || setupCost) {
-                        <div class="mb-3">
-                          @if (holdingCost) {
-                            <span class="badge rounded-pill text-bg-primary me-2">Costo di mantenimento: {{holdingCost | currency: 'EUR' : 'symbol' : '1.2-2'}}</span>
-                          }
-                          @if (setupCost) {
-                            <span class="badge rounded-pill text-bg-success me-2">Costo d'ordine: {{setupCost | currency: 'EUR' : 'symbol' : '1.2-2'}}</span>
-                          }
-                          @if (annualDemand) {
-                            <span class="badge rounded-pill text-bg-info">Domanda annua: {{annualDemand}}</span>
-                          }
-                        </div>
-                      }
-
-                      <div class="d-flex align-items-end">
-                        <div class="d-flex align-items-start flex-column">
-                          <div class="app-alert border-size-5 border-start border-info p-2 bg-info-subtle">
-                            <small class="fw-lighter">Senza "Domanda annua" è possibile avere una predizione della domanda annuale di quest'anno</small>
-                          </div>
-                          <div class="d-flex align-items-center">
-                            <app-form [controls]="formControls" (formSubmittedOutput)="onSubmit($event, product.id)"
-                                      [isLoading]="isLoading | async" [horizontal]="true" [light]="false"></app-form>
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          }
         }
       </tbody>
     </table>
@@ -221,7 +133,8 @@
     <div class="col text-nowrap">
       EOQ
       @if (predicted) {
-        <small class="ms-2 text-warning">(Predetto)</small>
+        <span class="text-danger" placement="top" ngbTooltip="Predetto in base ai dati di vendita passati">
+          <i class="bi bi-graph-up"></i></span>
       }
     </div>
     <div class="col">{{ eoq.eoq}}</div>
@@ -249,5 +162,45 @@
       <div class="col">{{ eoq.bestTotalCost | currency: 'EUR' : 'symbol' : '1.2-2'  }}</div>
     </div>
   }
+</ng-template>
+
+<ng-template #modal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{product.name}}: calcolo EOQ</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <div class="border-size-5 border-start border-info p-2 bg-info-subtle mb-3">
+      <small class="fw-lighter">Senza "Domanda annua" è possibile avere una predizione della domanda annuale di quest'anno</small>
+    </div>
+    <div class="d-flex align-items-center mb-3">
+      <app-form [controls]="formControls" (formSubmittedOutput)="onSubmit($event, product.id)"
+                [isLoading]="isLoading | async" [horizontal]="true" [light]="false"></app-form>
+    </div>
+    <div class="mt-5">
+      <h4>Dati di vendita</h4>
+      <table class="table">
+        <tbody>
+          @for (year of productSales; track year) {
+            <tr>
+              <td class="fw-bold">{{year[0]}}</td>
+              <td>
+                <table class="table">
+                  <tbody>
+                    @for (month of year[1]; track month) {
+                      <tr>
+                        <td>{{month[0]}}</td>
+                        <td>{{month[1]}}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
 </ng-template>
 

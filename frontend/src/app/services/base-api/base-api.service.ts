@@ -20,22 +20,17 @@ export abstract class BaseApiService implements IBaseApiService {
 
   getApiUrl(params: string | undefined, urlPathParams: IUrlPathParams | undefined, subUrl: string): string {
     let apiUrl = `${this.apiModel.url}`;
-
-    console.log("AAA 1.2", apiUrl);
     if (urlPathParams) {
       Object.keys(urlPathParams).forEach((key) => {
         apiUrl = apiUrl.replace(`:${key}`, urlPathParams[key]);
       });
     }
-    console.log("AAA 1.3", apiUrl);
     if (subUrl) {
       apiUrl = `${apiUrl}${subUrl}`;
     }
-    console.log("AAA 1.4", apiUrl);
     if (params) {
       apiUrl = `${apiUrl}?${params}`;
     }
-    console.log("AAA 1.5", apiUrl);
     return apiUrl;
   }
 
@@ -54,14 +49,12 @@ export abstract class BaseApiService implements IBaseApiService {
     if (apiUrl === undefined)
       return throwError(() => new Error(`Url not found for ${this.serviceType}`));
 
-    console.log("AAA 2", apiUrl);
     return this.http.request(this.apiModel.method, apiUrl, {body: apiOptions.body, headers: apiOptions.headers}).pipe(
       map((response: any) => {
         console.log(`[BaseApiService] ${this.serviceType.toString()} response: `, response);
         return response
       }),
       catchError((error: HttpErrorResponse) => {
-        console.log("AAA 3", error);
         throw this.getErrorMessage(error);
       })
     )

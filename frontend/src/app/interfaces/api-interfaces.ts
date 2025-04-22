@@ -32,6 +32,12 @@ export interface IApiOptions {
   headers: HttpHeaders
 }
 
+export interface IProductInfo {
+  annualDemand: number;
+  holdingCost: number;
+  setupCost: number;
+}
+
 export interface IBaseApiService {
   execute(apiOptions: Partial<IApiOptions>, subUrl: string): void;
 }

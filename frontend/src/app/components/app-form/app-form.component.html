@@ -1,15 +1,15 @@
 <div>
-  <form (ngSubmit)="onSubmit()" [formGroup]="form" [ngClass]="{'d-flex align-items-end': horizontal()}">
+  <form (ngSubmit)="onSubmit()" [formGroup]="form">
     <div class="row">
 
       @for (control of controls(); track control) {
-        <div class="col-12 col-md" [ngClass]="{'mb-3': !horizontal()}">
+        <div class="col-12 mb-3">
           <app-form-control [control]="control" [form]="form"
                             [horizontal]="horizontal()"></app-form-control>
         </div>
       }
 
-      <div class="col-12 col-md">
+      <div class="col-12 d-flex justify-content-end">
         <button *ngIf="!isLoading()" type="submit" class="btn"
                 [ngClass]="{'w-100': !horizontal(), 'btn-outline-light': light(), 'btn-outline-dark': !light()}"
                 [disabled]="!form.valid">Invia</button>

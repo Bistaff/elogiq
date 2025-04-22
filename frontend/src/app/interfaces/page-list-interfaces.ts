@@ -20,6 +20,7 @@ export interface IProduct {
   eoq: IEOQ;
   eoqPre: IEOQ;
   predictedEoq: boolean;
+  historicalSales: any
 }
 
 export interface IPriceTier {

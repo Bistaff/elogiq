@@ -89,8 +89,15 @@ export class CompanyComponent implements OnInit {
 
     months = Object.keys(months).sort((a: string, b: string) => {
       return values[a] - values[b]
-    }).map((month: string) => ({[month]: months[month]}))
+    }).map((month: string) => ({[this.translateMonths(month)]: months[month]}))
     return months
+  }
+
+  translateMonths(month: string) {
+    let translated: {[key: string]: string} = {"January": "Gennaio", "February": "Febbraio", "March": "Marzo",
+      "April": "Aprile", "May": "Maggio", "June": "Giugno", "July": "Luglio", "August": "Agosto",
+      "September": "Settembre", "October": "Ottobre", "November": "Novembre", "December": "Dicembre"}
+    return translated[month]
   }
 
   onSubmit(companyReq: Partial<IProductRequest>, productId: number) {

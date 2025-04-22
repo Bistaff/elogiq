@@ -24,7 +24,7 @@ class EOQComparer:
         print(f"EOQ: {Q_eoq}, annual_demand: {annual_demand}, holding_cost: {holding_cost}, setup_cost: {setup_cost}")
 
         tiers = list(product.price_tiers.all())
-        if not tiers: tiers = list(PriceTier(product=product, min_quantity=1, unit_price=product.price).save())
+        if not tiers: tiers = list(PriceTier(product=product, min_quantity=1, unit_price=product.price))
 
         miglior_costo = EOQComparer.costo_totale_con_eoq(annual_demand, setup_cost, holding_cost, float(product.price), Q_eoq)
         calcolo_iniziale = {

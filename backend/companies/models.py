@@ -32,17 +32,10 @@ class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, help_text="Unit price of the product", null=False, default=0)
-    # ordering_cost = models.DecimalField(max_digits=10, decimal_places=2, help_text="Fixed cost per order (S)")
     historical_sales = models.JSONField()
-    # holding_cost = models.DecimalField(max_digits=10, decimal_places=2, help_text="Annual holding cost per unit (H)")
-    # annual_demand = models.PositiveIntegerField(help_text="Estimated annual demand (D)")
 
     def __str__(self):
         return f"{self.name} by {self.company.name}"
-
-    # def get_best_eoq_option(self):
-    #     """Returns the best EOQ option considering quantity discount tiers."""
-    #     return EOQCalculator.get_optimal_quantity(self)
 
 
 class PriceTier(models.Model):

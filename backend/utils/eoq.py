@@ -1,5 +1,5 @@
 import math
-from companies.models import Product, PriceTier, Company
+from companies.models import Product, PriceTier
 import pandas as pd
 
 from companies.serializers import ProductPublicSerializer
@@ -8,27 +8,27 @@ from companies.serializers import ProductPublicSerializer
 class EOQComparer:
 
     @staticmethod
-    def costo_totale_con_eoq(demand, ordering_cost, holding_cost, prezzo_unitario, eoq):
-        costo_ordinazione_eoq = (demand / eoq) * ordering_cost
+    def costo_totale_con_eoq(demand, setup_cost, holding_cost, prezzo_unitario, eoq):
+        costo_ordinazione_eoq = (demand / eoq) * setup_cost
         costo_mantenimento_eoq = (eoq / 2) * holding_cost
         costo_unita_eoq = demand * prezzo_unitario
         return costo_ordinazione_eoq + costo_mantenimento_eoq + costo_unita_eoq
 
     @staticmethod
-    def confronta(product: Product, annual_demand: int, holding_cost: float):
+    def confronta(product: Product, annual_demand: int, holding_cost: float, setup_cost: float):
         annual_demand = float(annual_demand)
         holding_cost = float(holding_cost)
-        ordering_cost = float(product.ordering_cost)
+        setup_cost = float(setup_cost)
 
-        Q_eoq = math.sqrt((2 * annual_demand * ordering_cost) / holding_cost)
-
+        Q_eoq = math.sqrt((2 * annual_demand * setup_cost) / holding_cost)
+        print(f"EOQ: {Q_eoq}, annual_demand: {annual_demand}, holding_cost: {holding_cost}, setup_cost: {setup_cost}")
 
         tiers = list(product.price_tiers.all())
         if not tiers: tiers = list(PriceTier(product=product, min_quantity=1, unit_price=product.price).save())
 
-        miglior_costo = EOQComparer.costo_totale_con_eoq(annual_demand, ordering_cost, holding_cost, float(product.price), Q_eoq)
+        miglior_costo = EOQComparer.costo_totale_con_eoq(annual_demand, setup_cost, holding_cost, float(product.price), Q_eoq)
         calcolo_iniziale = {
-                    "eoq": round(Q_eoq),
+                    "eoq":  1 if Q_eoq < 1 else round(Q_eoq),
                     "req_unit_price": round(product.price, 2),
                     "min_quantity": annual_demand,
                     "total_cost": miglior_costo
@@ -37,7 +37,7 @@ class EOQComparer:
         for tier in tiers:
             if (tier.min_quantity <= annual_demand): continue
             prezzo_unitario = float(tier.unit_price)
-            costo = EOQComparer.costo_totale_con_eoq(tier.min_quantity, ordering_cost, holding_cost, prezzo_unitario, Q_eoq)
+            costo = EOQComparer.costo_totale_con_eoq(tier.min_quantity, setup_cost, holding_cost, prezzo_unitario, Q_eoq)
             print(f"Prezzo unitario: {prezzo_unitario}, EOQ: {Q_eoq}, Costo con EOQ: {costo}, min quantity: {tier.min_quantity}")
 
             if costo < miglior_costo:
@@ -80,22 +80,18 @@ class EOQComparer:
 
 
     @staticmethod
-    def calculateEOQ(company: Company, annual_demand: int, holding_cost: float):
-        products = company.products.all()
-        products_data = []
-        predicted_eoq=False
-        for product in products:
-            product_data = ProductPublicSerializer(product).data
-            # Calcola l'EOQ ottimale
-            if annual_demand == 0:
-                print("Calcolo della domanda annuale media mobile")
-                annual_demand = EOQComparer.calcola_media_mobile_domanda_annuale(product.historical_sales)
-                eoq_data = EOQComparer.confronta(product, annual_demand=annual_demand, holding_cost=holding_cost)
-                product_data['eoq_pre'] = eoq_data
-                predicted_eoq = True
-            else:
-                eoq_data = EOQComparer.confronta(product, annual_demand=annual_demand, holding_cost=holding_cost)
-                product_data['eoq'] = eoq_data
+    def calculateEOQ(product: Product, annual_demand: int, holding_cost: float, setup_cost: float):
+        product_data = ProductPublicSerializer(product).data
+        # Calcola l'EOQ ottimale
+        if annual_demand == 0:
+            print("Calcolo della domanda annuale media mobile")
+            annual_demand = EOQComparer.calcola_media_mobile_domanda_annuale(product.historical_sales)
+            eoq_data = EOQComparer.confronta(product, annual_demand=annual_demand, holding_cost=holding_cost, setup_cost=setup_cost)
+            product_data['eoq_pre'] = eoq_data
+            product_data['predicted_eoq'] = True
+        else:
+            eoq_data = EOQComparer.confronta(product, annual_demand=annual_demand, holding_cost=holding_cost, setup_cost=setup_cost)
+            product_data['eoq'] = eoq_data
+            product_data['predicted_eoq'] = False
 
-            products_data.append(product_data)
-        return products_data, predicted_eoq
+        return product_data

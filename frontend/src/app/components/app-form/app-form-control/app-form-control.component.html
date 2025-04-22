@@ -1,4 +1,4 @@
-<div [formGroup]="form()" class="me-3">
+<div [formGroup]="form()" [ngClass]="{'me-3': !horizontal()}">
   <label [attr.for]="control().key" class="form-label text-nowrap">
     {{ control().label }}
     @if (horizontal() && !isValid && !form().disabled) {

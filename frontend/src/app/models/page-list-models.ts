@@ -29,13 +29,19 @@ export const ListFormControls: Record<string, AppFormControl<any>[]> = {
       validators: [Validators.required, Validators.min(1), Validators.max(10000)],
       order: 1
     }),
-
+    new TextboxControl({
+      key: 'setupCost',
+      label: "Costo d'ordine",
+      type: 'number',
+      validators: [Validators.required, Validators.min(1), Validators.max(10000)],
+      order: 2
+    }),
     new TextboxProtectedControl({
       key: 'annualDemand',
       label: 'Domanda annua',
       type: 'number',
       validators: [Validators.min(1), Validators.max(10000)],
-      order: 2
+      order: 3
     }),
   ]
 }

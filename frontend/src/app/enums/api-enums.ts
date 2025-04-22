@@ -5,4 +5,5 @@ export enum ApiServiceEnum {
   'COMPANIES'= 'companies',
   'COMPANY'= 'company',
   'PRODUCTS'= 'products',
+  'PRODUCT'= 'product',
 }

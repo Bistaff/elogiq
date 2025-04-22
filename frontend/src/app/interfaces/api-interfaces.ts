@@ -21,7 +21,12 @@ export interface IApiModel {
   [key: string]: Partial<IApiModelObject>;
 }
 
+export interface IUrlPathParams {
+  [key: string]: any;
+}
+
 export interface IApiOptions {
+  urlPathParams: IUrlPathParams;
   params: string;
   body: any;
   headers: HttpHeaders

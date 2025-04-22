@@ -9,25 +9,24 @@ import {ICompanyRequest, IProductRequest} from '../../interfaces/companies-inter
 @Injectable({
   providedIn: 'root'
 })
-export class CompaniesService extends BaseApiService {
+export class ProductService extends BaseApiService {
 
   constructor(protected override http: HttpClient) {
-    super(http, ApiServiceEnum.COMPANIES);
+    super(http, ApiServiceEnum.PRODUCT);
   }
 
-  get(): Observable<ICompany[]> {
-    return this.execute({}).pipe(
-      map((response: ICompany[]) => {
+  get(req: Partial<IProductRequest>): Observable<IProduct> {
+    let urlPathParams = {
+      companyId: req.companyId,
+      productId: req.productId
+    }
+    let params: string = `holdingCost=${req.holdingCost}&setupCost=${req.setupCost}`;
+    if (req.annualDemand) params = `${params}&annualDemand=${req.annualDemand}`;
+    console.log("AAA 1", params, urlPathParams);
+    return this.execute({params: params, urlPathParams}).pipe(
+      map((response: IProduct) => {
         return response
       }),
-      catchError((error: string) => { throw error })
-    );
-  }
-
-  getCompany(req: Partial<ICompanyRequest>): Observable<ICompany> {
-    let subUrl = `${req.companyId}/`;
-    return this.executeSub(`${subUrl}`, {}).pipe(
-      map((response: ICompany) => response),
       catchError((error: string) => { throw error })
     );
   }

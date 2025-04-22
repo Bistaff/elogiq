@@ -7,7 +7,6 @@ export interface ICompany {
   id: number;
   name: string;
   sector: ISector;
-  predictedEoq: boolean;
   products: IProduct[];
 }
 
@@ -17,10 +16,10 @@ export interface IProduct {
   name: string;
   description: string;
   price: number;
-  orderingCost: string;
   priceTiers: IPriceTier[];
   eoq: IEOQ;
   eoqPre: IEOQ;
+  predictedEoq: boolean;
 }
 
 export interface IPriceTier {

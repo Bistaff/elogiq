@@ -3,7 +3,7 @@ from .views import (
     MyCompanyView,
     SectorListView,
     MarketCompaniesView,
-    CompanyProductsView, MarketCompanyView,
+    CompanyProductsView, MarketCompanyView, CompanyProductView,
 )
 
 urlpatterns = [
@@ -12,4 +12,5 @@ urlpatterns = [
     path('market/companies/', MarketCompaniesView.as_view(), name='market-companies'),
     path('market/companies/<int:company_id>/', MarketCompanyView.as_view(), name='market-companies'),
     path('market/companies/<int:company_id>/products/', CompanyProductsView.as_view(), name='company-products'),
+    path('market/companies/<int:company_id>/products/<int:product_id>/', CompanyProductView.as_view(), name='company-products'),
 ]

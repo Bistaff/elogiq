@@ -1,5 +1,5 @@
 import {
-  afterNextRender,
+  afterNextRender, ChangeDetectionStrategy,
   Component,
   computed,
   inject,
@@ -16,7 +16,7 @@ import {AppFormControl} from '../../models/form/form-class';
 import {ListFormControls} from '../../models/page-list-models';
 import {ApiServiceEnum} from '../../enums/api-enums';
 import {Observable} from 'rxjs';
-import {ICompanyRequest} from '../../interfaces/companies-interfaces';
+import {ICompanyRequest, IProductRequest} from '../../interfaces/companies-interfaces';
 import {AppFormComponent} from '../../components/app-form/app-form.component';
 
 @Component({
@@ -28,21 +28,18 @@ import {AppFormComponent} from '../../components/app-form/app-form.component';
   ],
   templateUrl: './company.component.html',
   standalone: true,
-  styleUrl: './company.component.scss'
+  styleUrl: './company.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CompanyComponent implements OnInit {
   store = inject(CompaniesStore);
   id: InputSignal<number> = input(0);
-  eoq: WritableSignal<boolean> = signal(false);
+  eoq: WritableSignal<number> = signal(-1);
   formControls: AppFormControl<any>[] = [];
   isLoading: Observable<boolean>;
   annualDemand: number = 0;
   holdingCost: number = 0;
-  predictedEoq = computed(() => {
-    const selectedCompany = this.store.selectedCompany();
-    if (!selectedCompany) return false
-    return selectedCompany.predictedEoq
-  })
+  setupCost: number = 0;
 
   constructor() {
     this.isLoading = this.store.isLoading$;
@@ -53,14 +50,23 @@ export class CompanyComponent implements OnInit {
     this.store.getCompany({companyId: this.id()})
   }
 
-  showEOQ() {
-    this.eoq.set(!this.eoq());
+  showEOQ(index: number) {
+    console.log('showEOQ', index);
+    this.eoq.set(index);
   }
 
-  onSubmit(companyReq: Partial<ICompanyRequest>) {
+  onSubmit(companyReq: Partial<IProductRequest>, productId: number) {
     this.annualDemand = companyReq.annualDemand ? companyReq.annualDemand : 0;
     this.holdingCost = companyReq.holdingCost ? companyReq.holdingCost : 0;
-    this.store.getCompany({companyId: this.id(), ...companyReq});
+    this.setupCost = companyReq.setupCost ? companyReq.setupCost : 0;
+    console.log("AAA 0", companyReq, productId, this.annualDemand, this.holdingCost, this.setupCost);
+    this.store.getProduct({
+      companyId: this.id(),
+      productId,
+      annualDemand: this.annualDemand,
+      holdingCost: this.holdingCost,
+      setupCost: this.setupCost
+    });
   }
 
 }

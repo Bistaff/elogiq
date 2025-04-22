@@ -21,7 +21,7 @@ class ProductPublicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['id', 'name', 'year_launched', 'description', 'price', 'ordering_cost', 'price_tiers', 'historical_sales']
+        fields = ['id', 'name', 'year_launched', 'description', 'price', 'price_tiers', 'historical_sales']
 
 
 """Serializer for other companies"""

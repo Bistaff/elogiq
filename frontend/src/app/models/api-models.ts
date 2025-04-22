@@ -31,6 +31,13 @@ export const ApiModels: IApiModel = {
     appRoute: 'companies',
     subAppRoute: 'companies/:id',
     url: `/api/market/companies/`,
+  },
+  [ApiServiceEnum.PRODUCT]: {
+    showInApp: false,
+    name: ApiServiceEnum.PRODUCT,
+    method: 'GET',
+    internal: false,
+    url: `api/market/companies/:companyId/products/:productId/`,
   }
 }
 

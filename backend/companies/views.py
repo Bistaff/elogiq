@@ -3,7 +3,7 @@ from django.http.response import JsonResponse, HttpResponse
 from rest_framework import generics, permissions
 from rest_framework.views import APIView
 
-from utils.eoq import EOQComparer
+from utils.eoq import EOQComparatore
 from .models import Company, Sector, Product
 from .serializers import (
     SectorSerializer,
@@ -66,7 +66,7 @@ class CompanyProductsView(generics.ListAPIView):
 
 
 
-"""GET /api/market/companies/<company_id>/products/<product_id>/ - products of a specific company"""
+"""GET /api/market/companies/<company_id>/products/<product_id>/ - prodotto di una specifica azienda"""
 class CompanyProductView(APIView):
     serializer_class = ProductPublicSerializer
 
@@ -74,45 +74,46 @@ class CompanyProductView(APIView):
         if not company_id or not product_id:
             return handle_error("Company ID and Product ID are required", 400)
         user_company = getattr(self.request.user, 'company', None)
+        # Se l'utente loggato ha una company e il company_id è uguale a quello dell'utente, non può visualizzare i propri prodotti
         if user_company and user_company.id == company_id:
             raise PermissionDenied("You can't view your own products this way.")
 
-        holding_cost = 0
-        annual_demand = 0
-        setup_cost = 0
-        predict_demand = True
+        costo_mantenimento = 0
+        domanda_anuale = 0
+        costo_di_setup = 0
+        previsione_domanda = True
+        # Controlla se sono stati forniti i parametri di ricerca
         if 'holdingCost' in self.request.GET and int(request.GET.get('holdingCost')) > 0:
-            holding_cost = request.GET.get('holdingCost')
+            costo_mantenimento = request.GET.get('holdingCost')
         if 'setupCost' in self.request.GET and int(request.GET.get('setupCost')) > 0:
-            setup_cost = request.GET.get('setupCost')
+            costo_di_setup = request.GET.get('setupCost')
         if 'annualDemand' in self.request.GET and int(request.GET.get('annualDemand')) > 0:
-            predict_demand = False
-            annual_demand = self.request.GET['annualDemand']
+            previsione_domanda = False
+            domanda_anuale = self.request.GET['annualDemand']
 
+        # Controlla se l'azienda esiste
         company = Company.objects.get(id=company_id)
         if not company:
             return handle_error("Company not found", 404)
 
+        # Controlla se il prodotto esiste
         product = company.products.filter(id=product_id).first()
         if not product:
             return handle_error("Product not found", 404)
 
-        product_data = {}
-        # predict demand to boolean
-        predict_demand = bool(predict_demand)
-        if not annual_demand and (predict_demand and holding_cost):
-            product_data = EOQComparer.calculateEOQ(product, 0, holding_cost, setup_cost)
-            return JsonResponse(product_data, safe=False)
+        dati_prodotto = {}
+        previsione_domanda = bool(previsione_domanda)
+        if not domanda_anuale and (previsione_domanda and costo_mantenimento):
+            dati_prodotto = EOQComparatore.calcolaEOQ(product, 0, costo_mantenimento, costo_di_setup)
+            return JsonResponse(dati_prodotto, safe=False)
 
-        if annual_demand and annual_demand:
-            product_data = EOQComparer.calculateEOQ(product, annual_demand, holding_cost, setup_cost)
-            return JsonResponse(product_data, safe=False)
+        if domanda_anuale and domanda_anuale:
+            dati_prodotto = EOQComparatore.calcolaEOQ(product, domanda_anuale, costo_mantenimento, costo_di_setup)
+            return JsonResponse(dati_prodotto, safe=False)
 
         return JsonResponse(ProductPublicSerializer(product).data, safe=False)
 
 
 def handle_error(message: str, status_code: int = 400):
-    """
-    Helper function to handle errors in a consistent way.
-    """
+    """Funzione di utilità per gestire gli errori in modo coerente."""
     return JsonResponse({"detail": message}, content_type="application/json", status=status_code)

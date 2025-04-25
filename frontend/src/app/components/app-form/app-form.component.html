@@ -11,10 +11,10 @@
 
       <div class="col-12 d-flex justify-content-end">
         <button *ngIf="!isLoading()" type="submit" class="btn"
-                [ngClass]="{'w-100': !horizontal(), 'btn-outline-light': light(), 'btn-outline-dark': !light()}"
+                [ngClass]="{'w-100': !horizontal(), 'btn-outline-light': light(), 'btn-outline-primary': !light()}"
                 [disabled]="!form.valid">Invia</button>
         <button *ngIf="isLoading()" class="btn btn-outline-light"
-                [ngClass]="{'w-100': !horizontal(), 'btn-outline-light': light(), 'btn-outline-dark': !light()}"
+                [ngClass]="{'w-100': !horizontal(), 'btn-outline-light': light(), 'btn-outline-primary': !light()}"
                 type="button" disabled>
           <span class="spinner-grow spinner-grow-sm me-2" aria-hidden="true"></span>
           <span role="status">Attendere...</span>

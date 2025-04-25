@@ -27,7 +27,7 @@ export default {
   {
     "renderMode": 0,
     "preload": [
-      "chunk-5XYGFF2P.js",
+      "chunk-WHVZCBJ4.js",
       "chunk-TY6MGJKC.js"
     ],
     "route": "/companies/*"
@@ -46,8 +46,8 @@ export default {
 ],
   entryPointToBrowserMapping: undefined,
   assets: {
-    'index.csr.html': {size: 5548, hash: 'e4e98a171050bed51796739f38dc78e0b14e74a2a79bce2ab3c4195833728b5f', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
-    'index.server.html': {size: 1261, hash: '3555d1c9239260146f090ede13be6f6ffc51232ccd84040666e02b9a006e390d', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
+    'index.csr.html': {size: 5548, hash: 'd54c47d339da58db4c987a9f0843bdaf6786db09a85ec7a740f2a1629da05638', text: () => import('./assets-chunks/index_csr_html.mjs').then(m => m.default)},
+    'index.server.html': {size: 1261, hash: '33b10ecbeb67eedd61b4a4f9d403756f80c7509e51f72c895bc79e93914bcc9a', text: () => import('./assets-chunks/index_server_html.mjs').then(m => m.default)},
     'styles-YGYTPPG3.css': {size: 310884, hash: 'h4H4K3RyHno', text: () => import('./assets-chunks/styles-YGYTPPG3_css.mjs').then(m => m.default)}
   },
 };

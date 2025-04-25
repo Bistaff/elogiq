@@ -4,7 +4,7 @@ services:
     networks:
       - elogiq_net
     container_name: postgres
-    image: bistaff95/elogiqpg:$IMAGE_TAG
+    image: postgres:16.8-bullseye
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:

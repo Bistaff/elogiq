@@ -7,7 +7,7 @@ services:
     image: postgres:16.8-bullseye
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-      - backend/scripts/postgres:/docker-entrypoint-initdb.d/
+      - ../backend/scripts/postgres:/docker-entrypoint-initdb.d/
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -31,7 +31,7 @@ services:
     container_name: ${FE_IMAGE_NAME}
     command: ["./run_fe.sh"]
     ports:
-      - "4000:4000"
+      - "80:4200"
     depends_on:
       - backend
 

@@ -1,2 +1,2 @@
 echo "Run application"
-node dist/frontend/server/server.mjs
+HOST=0.0.0.0 node dist/frontend/server/server.mjs

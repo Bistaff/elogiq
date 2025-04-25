@@ -1,5 +1,5 @@
 # Usa una base ufficiale Python
-FROM python:3.13-bullseye
+FROM python:3.13
 
 # Disabilita bytecode e buffering
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
@@ -26,4 +26,3 @@ RUN chmod +x run_be.sh
 RUN chmod +x startup.sh
 
 RUN apt-get update && apt-get install -y iputils-ping
-RUN apt-get update && apt-get install -y netcat

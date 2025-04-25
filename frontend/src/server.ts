@@ -48,10 +48,9 @@ app.post('/api/login', async (req, res) => {
     if (data.token) {
       authToken = data.token;
       res.cookie('auth_token', authToken, {
-        domain: 'localhost', // Sostituisci con il tuo dominio
-        httpOnly: true,  // Accessibile solo dal server
-        secure: process.env["NODE_ENV"] === 'production', // Se in produzione, usa HTTPS
-        maxAge: 3600000  // 1 ora
+        httpOnly: true,
+        secure: process.env["NODE_ENV"] === 'production',
+        maxAge: 3600000
       });
       res.status(200).json({ message: 'Login successful', authToken });
     } else {

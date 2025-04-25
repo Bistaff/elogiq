@@ -2,9 +2,6 @@
 
 source .docker/.env
 
-echo "Build of application"
-npm run build --configuration=production
-
 echo "Build project as image with name: $IMAGE_NAME:$IMAGE_TAG"
 docker build -t $IMAGE_NAME:$IMAGE_TAG -f .docker/Dockerfile .
 

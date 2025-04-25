@@ -1,2 +1,2 @@
 echo "Run application"
-HOST=0.0.0.0 node dist/frontend/server/server.mjs
+FE_HOST=0.0.0.0 BE_HOST=elogiqbe node dist/frontend/server/server.mjs

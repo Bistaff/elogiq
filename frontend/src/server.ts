@@ -16,10 +16,10 @@ const browserDistFolder = resolve(serverDistFolder, '../browser');
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 let authToken = "";
-const localeHost = process.env['HOST'] ? process.env['HOST'] : 'localhost';
-const localPort: number = process.env['PORT'] ? Number.parseInt(process.env['PORT']) : 4200;
-const beHost = process.env['HOST'] ? process.env['HOST'] : 'localhost';
-const bePort: number = process.env['PORT'] ? Number.parseInt(process.env['PORT']) : 8000;
+const localeHost = process.env['FE_HOST'] ? process.env['FE_HOST'] : 'localhost';
+const localPort: number = process.env['FE_PORT'] ? Number.parseInt(process.env['FE_PORT']) : 4200;
+const beHost = process.env['BE_HOST'] ? process.env['BE_HOST'] : 'localhost';
+const bePort: number = process.env['BE_PORT'] ? Number.parseInt(process.env['BE_PORT']) : 8000;
 
 interface IRequestObject {
   method: string; // Tipo string per indicare il metodo HTTP (e.g., "GET", "POST").

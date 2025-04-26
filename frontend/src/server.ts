@@ -41,24 +41,35 @@ app.post('/api/login', async (req, res) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', },
       body: JSON.stringify({ username, password }),
-    });
+    })
 
-    if (!response.ok) throw new Error('Invalid credentials');
+    if (!response.ok) {
+      if (response.status === 401) {
+        res.status(500).json('Credenziali non valide');
+        return;
+      }
+      res.status(500).json('Si è verificato un errore, riprovare.');
+      return;
+    }
     const data: {token: string} = await response.json() as {token: string};
+    console.log("CIAOOOO");
     if (data.token) {
+      console.log("CIAOOOO 1");
       authToken = data.token;
       res.cookie('auth_token', authToken, {
         httpOnly: true,
         secure: process.env["NODE_ENV"] === 'production',
         maxAge: 3600000
       });
-      res.status(200).json({ message: 'Login successful', authToken });
+      res.status(200).json({ message: 'Login avvenuto con successo', authToken });
     } else {
-      res.status(401).json({ error: 'Invalid credentials' });
+      console.log("CIAOOOO 2");
+      res.status(500).json('Credenziali non valide');
     }
-  } catch (error) {
-    console.error('Login failed', error);
-    res.status(500).json({ error: error });
+  } catch (error: Error | any) {
+    let err = error.message ? error.message : error.toString();
+    console.error('Login failed:', err);
+    res.status(500).json(err);
   }
 });
 

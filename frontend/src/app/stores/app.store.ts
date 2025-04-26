@@ -35,9 +35,9 @@ export const AppStore = signalStore(
           return loginService.login(credentials).pipe(
             tapResponse({
               next: (r: {token: string}) => patchState(store, {logged: true, isLoading: false}),
-              error: (error: Error) => {
-                patchState(store, {isLoading: false, error: error.message});
-                console.error('Error during login: ', error.message);
+              error: (error: string) => {
+                console.error('Error during login: ', error);
+                patchState(store, {isLoading: false, error: error});
               }
             })
           )

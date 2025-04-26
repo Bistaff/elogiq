@@ -1,7 +1,7 @@
 <div [formGroup]="form()" [ngClass]="{'me-3': horizontal()}">
   <label [attr.for]="control().key" class="form-label text-nowrap">
     {{ control().label }}
-    @if (horizontal() && !isValid && !form().disabled) {
+    @if (control().required) {
       <small class="text-danger">*</small>
     }
   </label>
@@ -26,5 +26,5 @@
       }
     }
   </div>
-  @if (!horizontal() && !isValid && !form().disabled) {<small class="text-danger">{{ control().label }} is required</small>}
+  @if (isDirty && errorMessage) {<small class="text-danger">{{errorMessage}}</small>}
 </div>

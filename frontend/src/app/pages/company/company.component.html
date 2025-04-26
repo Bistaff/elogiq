@@ -35,13 +35,21 @@
       [ngTemplateOutlet]="productsInfo"
       [ngTemplateOutletContext]="{products: company.products}"
     />
+    <div class="d-flex flex-column align-items-center d-lg-none pulse">
+      <p class="text-center text-secondary mb-0 fs-6">Puoi scrollare la tabella</p>
+      <div class="d-flex align-items-center text-secondary app-h-0 mt-2">
+        <i class="bi bi-arrow-left fs-5 me-1"></i>
+        <div class="dot dot-1 bg-secondary me-1 fs-5"></div>
+        <i class="bi bi-arrow-right fs-5 "></i>
+      </div>
+    </div>
   } @else {
     <h3>Non ci sono prodotti</h3>
   }
 </ng-template>
 
 <ng-template #productsInfo let-products="products">
-  <div class="table-responsive table-responsive-xl">
+  <div class="table-responsive">
     <table class="table table-hover">
       <thead>
       <tr>
@@ -67,7 +75,6 @@
               />
             </td>
             <td style="min-width: 300px;">
-              SISTEMAREEE
               @if (productInfo[product.id]) {
                 <div class="mb-3">
                   @if (productInfo[product.id].holdingCost) {
@@ -175,7 +182,7 @@
     </div>
     <div class="d-flex align-items-center mb-3">
       <app-form [controls]="formControls" (formSubmittedOutput)="onSubmit($event, product.id)"
-                [isLoading]="isLoading | async" [horizontal]="true" [light]="false"></app-form>
+                [isLoading]="isLoading | async" [light]="false"></app-form>
     </div>
     <div class="mt-5">
       <h4>Dati di vendita</h4>

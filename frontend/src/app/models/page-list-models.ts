@@ -2,6 +2,7 @@ import {AppFormControl} from './form/form-class';
 import {TextboxControl, TextboxProtectedControl} from './form/form-controls';
 import {Validators} from '@angular/forms';
 import {ApiServiceEnum} from '../enums/api-enums';
+import {numberValidator} from './form/custom-validators';
 
 export const ListFormControls: Record<string, AppFormControl<any>[]> = {
   [ApiServiceEnum.LOGIN]: [
@@ -9,6 +10,7 @@ export const ListFormControls: Record<string, AppFormControl<any>[]> = {
       key: 'username',
       label: 'Username',
       type: 'text',
+      required: true,
       validators: [Validators.required, Validators.minLength(3), Validators.maxLength(10)],
       order: 1
     }),
@@ -17,6 +19,7 @@ export const ListFormControls: Record<string, AppFormControl<any>[]> = {
       key: 'password',
       label: 'Password',
       type: 'password',
+      required: true,
       validators: [Validators.required, Validators.minLength(6), Validators.maxLength(20)],
       order: 2
     }),
@@ -25,22 +28,24 @@ export const ListFormControls: Record<string, AppFormControl<any>[]> = {
     new TextboxControl({
       key: 'holdingCost',
       label: 'Costo di mantenimento',
-      type: 'number',
-      validators: [Validators.required, Validators.min(1), Validators.max(10000)],
+      type: 'text',
+      required: true,
+      validators: [Validators.required, Validators.min(1), Validators.max(10000), numberValidator],
       order: 1
     }),
     new TextboxControl({
       key: 'setupCost',
       label: "Costo d'ordine",
-      type: 'number',
-      validators: [Validators.required, Validators.min(1), Validators.max(10000)],
+      type: 'text',
+      required: true,
+      validators: [Validators.required, Validators.min(1), Validators.max(10000), numberValidator],
       order: 2
     }),
-    new TextboxProtectedControl({
+    new TextboxControl({
       key: 'annualDemand',
       label: 'Domanda annua',
-      type: 'number',
-      validators: [Validators.min(1), Validators.max(10000)],
+      type: 'text',
+      validators: [Validators.min(1), Validators.max(10000), numberValidator],
       order: 3
     }),
   ]

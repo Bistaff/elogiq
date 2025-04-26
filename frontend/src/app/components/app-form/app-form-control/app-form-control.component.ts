@@ -1,7 +1,9 @@
-import {Component, input, Input, InputSignal} from '@angular/core';
+import {Component, input, InputSignal} from '@angular/core';
 import {FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {AppFormControl} from '../../../models/form/form-class';
+import {convertErrorKeyToString} from '../../../models/form/custom-validators';
+import {isValidDate} from 'rxjs/internal/util/isDate';
 
 @Component({
   selector: 'app-form-control',
@@ -18,7 +20,22 @@ export class AppFormControlComponent {
 
   showContent = false;
 
-  get isValid() {
-    return this.form()?.controls[this.control().key].valid;
+  get isTouched() {
+    console.log(`${this.control().label} -> Touched`, this.form()?.get(this.control().key)?.touched)
+    return this.form()?.get(this.control().key)?.touched;
   }
+
+  get isDirty() {
+    console.log(`${this.control().label} -> Dirty`, this.form()?.get(this.control().key)?.dirty)
+    return this.form()?.get(this.control().key)?.dirty;
+  }
+
+  get errorMessage(): string {
+    const errors = this.form()?.get(this.control().key)?.errors;
+    if (!errors) return "";
+    const errorKey: string = Object.keys(errors).pop() || '';
+    return convertErrorKeyToString(errorKey);
+  }
+
+  protected readonly isValidDate = isValidDate;
 }

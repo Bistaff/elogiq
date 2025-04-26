@@ -7,6 +7,7 @@ export class AppFormControl<T> {
   order: number;
   controlType: string;
   type: string;
+  required: boolean;
   validators: ValidatorFn[];
   options: {key: string; value: string}[];
 
@@ -18,6 +19,7 @@ export class AppFormControl<T> {
       order?: number;
       controlType?: string;
       type?: string;
+      required?: boolean;
       validators?: ValidatorFn[];
       options?: {key: string; value: string}[];
     } = {},
@@ -28,6 +30,7 @@ export class AppFormControl<T> {
     this.order = options.order === undefined ? 1 : options.order;
     this.controlType = options.controlType || '';
     this.type = options.type || '';
+    this.required = !!options.required;
     this.validators = options.validators || [];
     this.options = options.options || [];
   }

@@ -3,7 +3,6 @@ from companies.models import Product, PriceTier
 import pandas as pd
 from companies.serializers import ProductPublicSerializer
 
-
 class EOQComparatore:
 
     @staticmethod
@@ -18,14 +17,20 @@ class EOQComparatore:
         domanda_annuale = float(domanda_annuale)
         costo_mantenimento = float(costo_mantenimento)
         costo_di_setup = float(costo_di_setup)
-
-        Q_eoq = math.sqrt((2 * domanda_annuale * costo_di_setup) / costo_mantenimento)
-
+        Q_eoq = round(math.sqrt((2 * domanda_annuale * costo_di_setup) / costo_mantenimento))
         fasce_prezzo = list(product.price_tiers.all())
         if not fasce_prezzo: fasce_prezzo = list(PriceTier(product=product, min_quantity=1, unit_price=product.price))
 
-        miglior_costo = EOQComparatore.costo_totale_con_eoq(domanda_annuale, costo_di_setup, costo_mantenimento, float(product.price), Q_eoq)
-        calcolo_iniziale = { "eoq":  1 if Q_eoq < 1 else round(Q_eoq), "req_unit_price": round(product.price, 2),
+        prezzo_unitario = float(product.price)
+        for x in range(len(fasce_prezzo)):
+            f_min = fasce_prezzo[x].min_quantity
+            f_max = fasce_prezzo[x + 1].min_quantity - 1 if x < len(fasce_prezzo) - 1 else float("inf")
+            if f_min <= domanda_annuale <= f_max:
+                prezzo_unitario = float(fasce_prezzo[x].unit_price)
+                break
+
+        miglior_costo = EOQComparatore.costo_totale_con_eoq(domanda_annuale, costo_di_setup, costo_mantenimento, prezzo_unitario, Q_eoq)
+        calcolo_iniziale = { "eoq":  1 if Q_eoq < 1 else round(Q_eoq), "req_unit_price": round(prezzo_unitario, 2),
                     "min_quantity": domanda_annuale, "total_cost": miglior_costo }
 
         migliore_opzione = None
@@ -50,7 +55,7 @@ class EOQComparatore:
             vendite_anno = 0
             for mese, vendite in mesi.items():
                 vendite_anno += vendite
-            dati_vendite.append([f"{anno}", vendite_anno]) # Creates data like [["2020", 100], ["2021", 200], ["2022", 300]]
+            dati_vendite.append([f"{anno}", vendite_anno])
         # Converti i dati in un DataFrame pandas
         df = pd.DataFrame(dati_vendite, columns=["Date", "Sales"])
         # Converte la colonna 'Date' in datetime per garantire una corretta gestione
@@ -76,5 +81,4 @@ class EOQComparatore:
             eoq_data = EOQComparatore.confronta(product, domanda_annuale=domanda_annuale, costo_mantenimento=costo_mantenimento, costo_di_setup=costo_di_setup)
             product_data['eoq'] = eoq_data
             product_data['predicted_eoq'] = False
-
         return product_data

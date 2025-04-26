@@ -78,9 +78,7 @@ class CompanyProductView(APIView):
         if user_company and user_company.id == company_id:
             raise PermissionDenied("You can't view your own products this way.")
 
-        costo_mantenimento = 0
-        domanda_anuale = 0
-        costo_di_setup = 0
+        costo_mantenimento, domanda_anuale, costo_di_setup = 0, 0, 0
         previsione_domanda = True
         # Controlla se sono stati forniti i parametri di ricerca
         if 'holdingCost' in self.request.GET and int(request.GET.get('holdingCost')) > 0:

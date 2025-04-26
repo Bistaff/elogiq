@@ -1,11 +1,11 @@
 import {
   ChangeDetectionStrategy,
-  Component,
+  Component, ElementRef,
   inject,
   input,
-  InputSignal, NgModuleRef,
+  InputSignal,
   OnInit,
-  signal, TemplateRef,
+  signal, TemplateRef, ViewChild,
   WritableSignal
 } from '@angular/core';
 import {CompaniesStore} from '../../stores/companies.store';
@@ -23,12 +23,7 @@ import {IProductInfo} from '../../interfaces/api-interfaces';
 
 @Component({
   selector: 'app-company',
-  imports: [
-    CommonModule,
-    LoadingComponent,
-    AppFormComponent,
-    NgbTooltip
-  ],
+  imports: [ CommonModule, LoadingComponent, AppFormComponent, NgbTooltip],
   templateUrl: './company.component.html',
   standalone: true,
   styleUrl: './company.component.scss',
@@ -38,6 +33,7 @@ export class CompanyComponent implements OnInit {
   store = inject(CompaniesStore);
   id: InputSignal<number> = input(0);
   eoq: WritableSignal<number> = signal(-1);
+  @ViewChild('table') table: ElementRef | undefined;
   formControls: AppFormControl<any>[] = [];
   isLoading: Observable<boolean>;
   private modalRef: NgbModalRef | null = null;
@@ -47,10 +43,7 @@ export class CompanyComponent implements OnInit {
   setupCost: number = 0;
   product: IProduct = {} as IProduct;
   productSales: any[] = [];
-
-
   private modalService = inject(NgbModal);
-  closeResult: WritableSignal<string> = signal('');
 
   constructor() {
     this.isLoading = this.store.isLoading$;
@@ -67,29 +60,20 @@ export class CompanyComponent implements OnInit {
     let products: IProduct[] | undefined = company.products;
     if (products === undefined || products.length === 0) return;
     this.product = products[index];
-    this.productSales = Object.keys(this.product.historicalSales).reduce((acc: any, year: string) => {
-      let salesOrd = this.orderedSales(this.product.historicalSales[year])
-      return [
-        ...acc,
-        [
-          year,
-          salesOrd.reduce((acc: any, month: any) => {
-            return [...acc, ...Object.entries(month)]
-          }, [])
-        ]
-      ]
-    }, [])
+    this.productSales = Object.keys(this.product.historicalSales)
+      .sort((a: string, b: string) => Number.parseInt(b) - Number.parseInt(a))
+      .reduce((acc: any, year: string) => {
+        let salesOrd = this.orderedSales(this.product.historicalSales[year])
+        return [...acc, [ year, salesOrd.reduce((acc: any, month: any) => [...acc, ...Object.entries(month)], [])]]
+      }, [])
     this.eoq.set(index);
     this.modalRef = this.modalService.open(content, { size: 'lg', ariaLabelledBy: 'modal-basic-title' });
   }
 
   orderedSales(months: any) {
-    let values: {[key: string]: number} = {"January": 0, "February": 1, "March": 2, "April": 3, "May": 4, "June": 5,
-      "July": 6, "August": 7, "September": 8, "October": 9, "November": 10, "December": 11}
-
-    months = Object.keys(months).sort((a: string, b: string) => {
-      return values[a] - values[b]
-    }).map((month: string) => ({[this.translateMonths(month)]: months[month]}))
+    let values: {[key: string]: number} = {"January": 11, "February": 10, "March": 9, "April": 8, "May": 7, "June": 6, "July": 5, "August": 4, "September": 3, "October": 2, "November": 1, "December": 0}
+    months = Object.keys(months).sort((a: string, b: string) => values[a] - values[b])
+      .map((month: string) => ({[this.translateMonths(month)]: months[month]}))
     return months
   }
 
@@ -104,20 +88,14 @@ export class CompanyComponent implements OnInit {
     this.annualDemand = companyReq.annualDemand ? companyReq.annualDemand : 0;
     this.holdingCost = companyReq.holdingCost ? companyReq.holdingCost : 0;
     this.setupCost = companyReq.setupCost ? companyReq.setupCost : 0;
-    this.productInfo[productId] = {
-      annualDemand: companyReq.annualDemand || 0,
-      holdingCost: companyReq.holdingCost || 0,
-      setupCost: companyReq.setupCost || 0
-    }
-    this.store.getProduct({
-      companyId: this.id(),
-      productId,
-      annualDemand: this.annualDemand,
-      holdingCost: this.holdingCost,
-      setupCost: this.setupCost
-    });
-    if (this.modalRef != null)
-      this.modalRef?.close()
+    this.productInfo[productId] = { annualDemand: companyReq.annualDemand || 0, holdingCost: companyReq.holdingCost || 0, setupCost: companyReq.setupCost || 0 }
+    this.store.getProduct({ companyId: this.id(), productId, annualDemand: this.annualDemand, holdingCost: this.holdingCost, setupCost: this.setupCost });
+    if (this.modalRef != null) this.modalRef?.close()
+    setTimeout(() => { this.scrollToEnd() }, 150);
   }
 
+  scrollToEnd() {
+    const tableElement = this.table?.nativeElement;
+    if (tableElement) tableElement.scrollTo({left: tableElement.scrollWidth, behavior: 'smooth'});
+  }
 }

@@ -20,13 +20,7 @@ export class AppFormControlComponent {
 
   showContent = false;
 
-  get isTouched() {
-    console.log(`${this.control().label} -> Touched`, this.form()?.get(this.control().key)?.touched)
-    return this.form()?.get(this.control().key)?.touched;
-  }
-
   get isDirty() {
-    console.log(`${this.control().label} -> Dirty`, this.form()?.get(this.control().key)?.dirty)
     return this.form()?.get(this.control().key)?.dirty;
   }
 

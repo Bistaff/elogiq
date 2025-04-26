@@ -33,9 +33,20 @@ export class DashboardComponent {
           return;
         }
         res.url.split("/").filter(r => r !== "").forEach(r => {
-          routes = [...routes, {text: r, route: lastRoute + r + "/"}]
+          routes = [...routes, {text: this.translateRoutes(r), route: lastRoute + r + "/"}]
         })
         this.pages = routes;
       });
+  }
+
+  translateRoutes(route: string) {
+    switch (route) {
+      case "home":
+        return "Home";
+      case "companies":
+        return "Aziende";
+      default:
+        return route
+    }
   }
 }

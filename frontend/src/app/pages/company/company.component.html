@@ -4,8 +4,11 @@
       [ngTemplateOutlet]="companyInfo"
       [ngTemplateOutletContext]="{company: company}"
     />
-  } @else if (store.error()){
-    <h2>Si è verificato un errore</h2>
+  } @else if (store.error()) {
+    <div class="bg-danger p-3 rounded text-danger-emphasis">
+      <h2>Si è verificato un errore</h2>
+      <h5>{{store.error()}}</h5>
+    </div>
   } @else { <app-loading></app-loading> }
 </div>
 
@@ -25,7 +28,6 @@
     </div>
   </div>
   <h3 class="mt-3 mb-3">Prodotti</h3>
-  <button class="btn btn-primary" (click)="scrollToEnd()">Scrolla a destra</button>
   @if (company.products.length > 0) {
     <ng-container [ngTemplateOutlet]="productsInfo" [ngTemplateOutletContext]="{products: company.products}" />
     <div class="d-flex flex-column align-items-center d-lg-none pulse mt-3">

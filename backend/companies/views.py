@@ -43,8 +43,10 @@ class MarketCompanyView(APIView):
         try:
             company = Company.objects.get(id=company_id)
             if not company:
-                return handle_error("Company not found", 404)
+                return handle_error("Azienda non trovata", 404)
             return JsonResponse(CompanyPublicSerializer(company).data, safe=False)
+        except Company.DoesNotExist:
+            return handle_error("Azienda non trovata", 404)
         except ValidationError as e:
             return handle_error(str(e), 400)
 

@@ -65,10 +65,12 @@ export abstract class BaseApiService implements IBaseApiService {
   }
 
   getErrorMessage(error: HttpErrorResponse): string {
-    let message = `[${this.serviceType.toString()}] There was an error: `;
-    if (error?.error) return `${message} ${error.error}`
-    if (error?.message) return `${message} ${error.message}`
-    if (error?.statusText) return `${message} ${error.statusText}`
-    return `${message} error.toString()}`
+    let message = `Errore:`;
+    if (error?.error) message = `${message} ${error.error}`
+    else if (error?.message) message = `${message} ${error.message}`
+    else if (error?.statusText) message = `${message} ${error.statusText}`
+    else message = `${message} ${error.toString()}}`
+    console.log(`[${this.serviceType.toString()}] ${message}`)
+    return message;
   }
 }

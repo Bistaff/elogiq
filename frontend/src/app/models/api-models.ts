@@ -10,6 +10,14 @@ export const ApiModels: IApiModel = {
     appRoute: 'login',
     url: `/api/login/`,
   },
+  [ApiServiceEnum.LOGOUT]: {
+    showInApp: false,
+    name: ApiServiceEnum.LOGOUT,
+    method: 'POST',
+    internal: true,
+    appRoute: 'logout',
+    url: `/api/logout/`,
+  },
   [ApiServiceEnum.DASHBOARD]: {
     showInApp: false,
     name: ApiServiceEnum.DASHBOARD,

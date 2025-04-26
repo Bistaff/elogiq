@@ -52,9 +52,7 @@ app.post('/api/login', async (req, res) => {
       return;
     }
     const data: {token: string} = await response.json() as {token: string};
-    console.log("CIAOOOO");
     if (data.token) {
-      console.log("CIAOOOO 1");
       authToken = data.token;
       res.cookie('auth_token', authToken, {
         httpOnly: true,
@@ -63,12 +61,28 @@ app.post('/api/login', async (req, res) => {
       });
       res.status(200).json({ message: 'Login avvenuto con successo', authToken });
     } else {
-      console.log("CIAOOOO 2");
       res.status(500).json('Credenziali non valide');
     }
   } catch (error: Error | any) {
     let err = error.message ? error.message : error.toString();
     console.error('Login failed:', err);
+    res.status(500).json(err);
+  }
+});
+
+app.post('/api/logout', async (req, res) => {
+  try {
+    console.log(`[LOGOUT ${req.url}]`);
+    authToken = "";
+    res.cookie('auth_token', '', {
+      httpOnly: true,
+      secure: process.env["NODE_ENV"] === 'production',
+      expires: new Date(0)
+    });
+    res.status(200).json({ message: 'Logout avvenuto con successo', authToken });
+  } catch (error: Error | any) {
+    let err = error.message ? error.message : error.toString();
+    console.error('Logout failed:', err);
     res.status(500).json(err);
   }
 });

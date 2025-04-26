@@ -1,5 +1,6 @@
 export enum ApiServiceEnum {
   'LOGIN'= 'login',
+  'LOGOUT'= 'logout',
   'DASHBOARD'= 'dashboard',
   'HOME'= 'home',
   'COMPANIES'= 'aziende',

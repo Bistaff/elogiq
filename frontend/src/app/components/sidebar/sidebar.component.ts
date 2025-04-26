@@ -39,4 +39,8 @@ export class SidebarComponent {
     this.currentPage = pageEnum;
     this.store.changeCurrentPage(pageEnum);
   }
+
+  logout() {
+    this.store.logoutUser({});
+  }
 }
